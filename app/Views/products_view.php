@@ -15,9 +15,7 @@
                             <th>Id</th>
                             <th>Name</th>
                             <th>UOM</th>
-                            <th>WareHouse</th>
-                            <th>Rack</th>
-                            <th>Bin</th>
+                            <th>WareHouse / Rack / Bin</th>
                             <th>Product Labels</th>
                             <th>Quantity</th>
                             <th>Status</th>

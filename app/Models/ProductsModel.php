@@ -53,14 +53,14 @@ class ProductsModel extends Model
         $this->select('GROUP_CONCAT(DISTINCT(bins.name) SEPARATOR ",") as bins_name');
         $this->select('GROUP_CONCAT(DISTINCT(labels.name) SEPARATOR ",") as labels_name');
         $this->select('products.quantity, products.status');
-        $this->join('product_warehouses', 'product_warehouses.product_id = products.id');
-        $this->join('warehouses', 'warehouses.id = product_warehouses.warehouse_id');
-        $this->join('product_racks', 'product_racks.product_id = products.id');
-        $this->join('racks', 'racks.id = product_racks.rack_id');
-        $this->join('product_bins', 'product_bins.product_id = products.id');
-        $this->join('bins', 'bins.id = product_bins.bin_id');
-        $this->join('product_labels', 'product_labels.product_id = products.id');
-        $this->join('labels', 'labels.id = product_labels.label_id');
+        $this->join('product_warehouses', 'product_warehouses.product_id = products.id', 'inner');
+        $this->join('warehouses', 'warehouses.id = product_warehouses.warehouse_id', 'inner');
+        $this->join('product_racks', 'product_warehouses.id = product_warehouse_id', 'inner');
+        $this->join('racks', 'racks.id = product_racks.rack_id', 'inner');
+        $this->join('product_bins', 'product_racks.id = product_rack_id', 'inner');
+        $this->join('bins', 'bins.id = product_bins.bin_id', 'inner');
+        $this->join('product_labels', 'product_labels.product_id = products.id', 'inner');
+        $this->join('labels', 'labels.id = product_labels.label_id', 'inner');
         $this->groupBy('products.id');
         return DataTable::of($this)
         ->add('action', function($row){

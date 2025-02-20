@@ -34,33 +34,30 @@ class ProductsSeeder extends Seeder
                     'updated_at'  => date('Y-m-d H:i:s'),
                 ];
                 $this->db->table('product_warehouses')->insert($pwSeed);
-            }
-            $rackIds = [];
-            $rackIds[] = $this->getRandomId('racks');
-            $rackIds[] = $this->getRandomId('racks');
-            $rackIds[] = $this->getRandomId('racks');
-            foreach($rackIds as $key=>$rackId) {
+                $productWareHouseId = $this->db->insertID();
+                $rackId = $this->getRandomId('racks');
                 $prSeed = [
-                    'product_id' => $productId,
+                    'product_warehouse_id' => $productWareHouseId,
                     'rack_id' => $rackId,
                     'created_at'  => date('Y-m-d H:i:s'),
                     'updated_at'  => date('Y-m-d H:i:s'),
                 ];
                 $this->db->table('product_racks')->insert($prSeed);
-            }
-            $binIds = [];
-            $binIds[] = $this->getRandomId('bins');
-            $binIds[] = $this->getRandomId('bins');
-            $binIds[] = $this->getRandomId('bins');
-            foreach($binIds as $key=>$binId) {
+                $productRackId = $this->db->insertID();
+
+
+                $binId = $this->getRandomId('bins');
+
                 $prSeed = [
-                    'product_id' => $productId,
+                    'product_rack_id' => $productRackId,
                     'bin_id' => $binId,
                     'created_at'  => date('Y-m-d H:i:s'),
                     'updated_at'  => date('Y-m-d H:i:s'),
                 ];
                 $this->db->table('product_bins')->insert($prSeed);
             }
+
+
             $labelIds = [];
             $labelIds[] = $this->getRandomId('labels');
             $labelIds[] = $this->getRandomId('labels');

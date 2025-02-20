@@ -10,7 +10,7 @@ class ProductBins extends Migration
     {
         $this->forge->addField([
             'id'          => ['type' => 'INT', 'constraint' => 5, 'unsigned' => true, 'auto_increment' => true],
-            'product_id' => [ 'type' => 'INT', 'constraint' => 5,'unsigned' => true ],
+            'product_rack_id' => [ 'type' => 'INT', 'constraint' => 5,'unsigned' => true ],
             'bin_id' => [ 'type' => 'INT', 'constraint' => 5,'unsigned' => true ],
             'created_at'  => ['type' => 'datetime', 'null' => true],
             'updated_at'  => ['type' => 'datetime', 'null' => true],
@@ -18,7 +18,7 @@ class ProductBins extends Migration
         ]);
 
         $this->forge->addPrimaryKey('id');
-        $this->forge->addForeignKey('product_id', 'products', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('product_rack_id', 'product_racks', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('bin_id', 'bins', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('product_bins', false, ['ENGINE' => 'InnoDB']);
     }
