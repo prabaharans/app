@@ -47,10 +47,14 @@ class ProductsModel extends Model
 
     public function getProductList()
     {
-        $this->select('products.id, products.name, products.uom');
-        $this->select('GROUP_CONCAT(DISTINCT(warehouses.name) SEPARATOR ",") as warehouses_name');
-        $this->select('GROUP_CONCAT(DISTINCT(racks.name) SEPARATOR ",") as racks_name');
-        $this->select('GROUP_CONCAT(DISTINCT(bins.name) SEPARATOR ",") as bins_name');
+        $this->select('products.id as pid, products.name, products.uom');
+        // $this->select('CONCAT(warehouses.name," / ",racks.name, " / ", bins.name) as warehouses_name');
+        // $this->select('GROUP_CONCAT(DISTINCT(warehouses.name) SEPARATOR ",") as warehouses_name');
+        // $this->select('GROUP_CONCAT(DISTINCT(racks.name) SEPARATOR ",") as racks_name');
+        // $this->select('GROUP_CONCAT(DISTINCT(bins.name) SEPARATOR ",") as bins_name');
+        $this->select('warehouses.name as warehouses_name');
+        $this->select('racks.name as racks_name');
+        $this->select('bins.name as bins_name');
         $this->select('GROUP_CONCAT(DISTINCT(labels.name) SEPARATOR ",") as labels_name');
         $this->select('products.quantity, products.status');
         $this->join('product_warehouses', 'product_warehouses.product_id = products.id', 'inner');
@@ -62,10 +66,14 @@ class ProductsModel extends Model
         $this->join('product_labels', 'product_labels.product_id = products.id', 'inner');
         $this->join('labels', 'labels.id = product_labels.label_id', 'inner');
         $this->groupBy('products.id');
-        return DataTable::of($this)
+        $this->groupBy('product_warehouses.id');
+        $this->groupBy('product_racks.id');
+        $this->groupBy('product_bins.id');
+        return DataTable::of($this)->addNumbering('no')
         ->add('action', function($row){
             return '<button type="button" class="btn btn-primary btn-sm" onclick="alert(\'edit product: '.$row->name.'\')" ><i class="fas fa-edit"></i> Edit</button>';
         }, 'last')
+        ->hide('pid')
         ->toJson();
     }
 }

@@ -12,10 +12,12 @@
                 <table id="table" class="table table-bordered" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>No</th>
                             <th>Name</th>
                             <th>UOM</th>
-                            <th>WareHouse / Rack / Bin</th>
+                            <th>WareHouse</th>
+                            <th>Rack</th>
+                            <th>Bin</th>
                             <th>Product Labels</th>
                             <th>Quantity</th>
                             <th>Status</th>
