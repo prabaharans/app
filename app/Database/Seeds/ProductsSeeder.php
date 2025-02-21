@@ -14,7 +14,7 @@ class ProductsSeeder extends Seeder
             $seed = [
                 'name'        => $faker->unique()->word(),
                 'uom'         => $faker->unique()->word(3),
-                'quantity'    => $faker->randomDigit(),
+
                 'created_at'  => date('Y-m-d H:i:s'),
                 'updated_at'  => date('Y-m-d H:i:s'),
             ];
@@ -55,6 +55,15 @@ class ProductsSeeder extends Seeder
                     'updated_at'  => date('Y-m-d H:i:s'),
                 ];
                 $this->db->table('product_bins')->insert($prSeed);
+                $productBinId = $this->db->insertID();
+
+                $pdSeed = [
+                    'product_bin_id' => $productBinId,
+                    'quantity'    => $faker->randomDigit(),
+                    'created_at'  => date('Y-m-d H:i:s'),
+                    'updated_at'  => date('Y-m-d H:i:s'),
+                ];
+                $this->db->table('product_details')->insert($pdSeed);
             }
 
 

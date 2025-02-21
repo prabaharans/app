@@ -52,4 +52,20 @@ class Products extends BaseController
 
         return $products->getProductList();
     }
+
+    public function add()
+    {
+        return view('product_add_view');
+    }
+
+    public function edit()
+    {
+        
+        return view('product_edit_view');
+    }
+
+    public function update()
+    {
+        return false;
+    }
 }

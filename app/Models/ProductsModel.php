@@ -56,24 +56,30 @@ class ProductsModel extends Model
         $this->select('racks.name as racks_name');
         $this->select('bins.name as bins_name');
         $this->select('GROUP_CONCAT(DISTINCT(labels.name) SEPARATOR ",") as labels_name');
-        $this->select('products.quantity, products.status');
+        $this->select('product_details.quantity, products.status');
+        $this->select('product_warehouses.id as pwid, product_racks.id as prid, product_bins.id as pbid');
         $this->join('product_warehouses', 'product_warehouses.product_id = products.id', 'inner');
         $this->join('warehouses', 'warehouses.id = product_warehouses.warehouse_id', 'inner');
         $this->join('product_racks', 'product_warehouses.id = product_warehouse_id', 'inner');
         $this->join('racks', 'racks.id = product_racks.rack_id', 'inner');
         $this->join('product_bins', 'product_racks.id = product_rack_id', 'inner');
         $this->join('bins', 'bins.id = product_bins.bin_id', 'inner');
+        $this->join('product_details', 'product_bins.id = product_bin_id', 'inner');
         $this->join('product_labels', 'product_labels.product_id = products.id', 'inner');
         $this->join('labels', 'labels.id = product_labels.label_id', 'inner');
         $this->groupBy('products.id');
         $this->groupBy('product_warehouses.id');
         $this->groupBy('product_racks.id');
         $this->groupBy('product_bins.id');
+        $this->groupBy('product_details.quantity');
         return DataTable::of($this)->addNumbering('no')
-        ->add('action', function($row){
-            return '<button type="button" class="btn btn-primary btn-sm" onclick="alert(\'edit product: '.$row->name.'\')" ><i class="fas fa-edit"></i> Edit</button>';
-        }, 'last')
-        ->hide('pid')
-        ->toJson();
+
+        ->toJson(true);
+
+        // ->add('action', function($row){
+        //     return '<button type="button" class="btn btn-primary btn-sm" onclick="alert(\'edit product: '.$row->name.'\')" ><i class="fas fa-edit"></i> Edit</button>';
+        // }, 'last')
+        // ->hide('pid')
     }
+
 }

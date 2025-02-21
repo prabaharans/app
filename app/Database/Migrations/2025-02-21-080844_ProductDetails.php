@@ -4,28 +4,26 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Products extends Migration
+class ProductDetails extends Migration
 {
     public function up()
     {
         $this->forge->addField([
             'id'          => ['type' => 'INT', 'constraint' => 5, 'unsigned' => true, 'auto_increment' => true],
-            'name'        => ['type' => 'VARCHAR', 'constraint' => 100],
-            'uom'         => ['type' => 'VARCHAR', 'constraint' => 100],
-            'status'      => ['type' => 'ENUM("Active","InActive")', 'default' => 'Active', 'null' => FALSE],
+            'product_bin_id' => [ 'type' => 'INT', 'constraint' => 5,'unsigned' => true ],
+            'quantity' => [ 'type' => 'INT', 'constraint' => 5,'unsigned' => true ],
             'created_at'  => ['type' => 'datetime', 'null' => true],
             'updated_at'  => ['type' => 'datetime', 'null' => true],
             'deleted_at'  => ['type' => 'datetime', 'null' => true],
         ]);
 
         $this->forge->addPrimaryKey('id');
-        $this->forge->addUniqueKey('name');
-        $this->forge->addUniqueKey('uom');
-        $this->forge->createTable('products', false, ['ENGINE' => 'InnoDB']);
+        $this->forge->addForeignKey('product_bin_id', 'product_bins', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('product_details', false, ['ENGINE' => 'InnoDB']);
     }
 
     public function down()
     {
-        $this->forge->dropTable('products');
+        $this->forge->dropTable('product_details');
     }
 }

@@ -26,4 +26,34 @@ class Warehouses extends BaseController
         }, 'last')
         ->toJson();
     }
+
+    public function getWarehouses($limit = 5, $offset = 10)
+    {
+        $request = service('request');
+        $postData = $request->getPost();
+
+        $response = array();
+
+        // Read new token and assign in $response['token']
+        $response['token'] = csrf_hash();
+
+        // Fetch record
+        $warehouses = new WarehousesModel();
+        $warehousesList = $warehouses->select('id,name')
+        if(isset($postData['searchTerm'])){
+            $searchTerm = $postData['searchTerm'];
+            $warehousesList->like('name',$searchTerm);
+        }
+        $warehousesList->orderBy('name')->findAll($limit, $offset);
+        $data = array();
+        foreach($warehousesList as $warehouse){
+        $data[] = array(
+            "id" => $warehouse['id'],
+            "text" => $warehouse['name'],
+        );
+
+        $response['data'] = $data;
+
+        return $this->response->setJSON($response);
+    }
 }
