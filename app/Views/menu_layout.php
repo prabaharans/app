@@ -19,6 +19,10 @@
 .select2-container--open {
     z-index: 9999999
 }
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+    margin: 0.25rem 0 .1875rem .1875rem;
+    line-height: 1.75rem;
+}
 </style>
 <style {csp-style-nonce}>
 

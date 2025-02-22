@@ -24,4 +24,39 @@ class Labels extends BaseController
         }, 'last')
         ->toJson();
     }
+
+    public function getLabels($limit = 10, $offset = 0)
+    {
+        $request = service('request');
+        $postData = $request->getPost();
+
+        $response = array();
+
+        // Read new token and assign in $response['token']
+        $response['token'] = csrf_hash();
+        $page = ($postData['page']) ?? 1;
+        $offset = ($page - 1) * $limit;
+        // Fetch record
+        $labels = new LabelsModel();
+        $labels->select('id,name')->orderBy('name')->asArray();
+        if(isset($postData['searchTerm'])){
+            $searchTerm = $postData['searchTerm'];
+            $labels->like('name',$searchTerm);
+        }
+        $labelsCount = $labels->countAllResults();
+        $labelsList = $labels->findAll($limit, $offset);
+        $endCount = $offset + $limit;
+        $morePages = $endCount < $labelsCount;
+        $data = array();
+        foreach($labelsList as $label){
+            $data[] = array(
+                "id" => $label['id'],
+                "text" => $label['name'],
+            );
+        }
+
+        $response['data'] = $data;
+        $response['pagination']['more'] = $morePages;
+        return $this->response->setJSON($response);
+    }
 }

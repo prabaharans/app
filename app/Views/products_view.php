@@ -138,7 +138,8 @@
                         // }
                     ],
                     rowCallback: function(row, data, index){
-                        $(row).find('.edit').on('click', function() {
+                        $(row).find('.edit').on('click', function(e) {
+                            e.stopImmediatePropagation();
                             console.log('data.pid => '+data.pid);
                             console.log('data.puid => '+data.puid);
                             console.log('data.pwid => '+data.pwid);
@@ -234,7 +235,6 @@
                     setTimeout(function() {
                         $("#uom").select2({
                             theme: "bootstrap4 ",
-                            // containerCssClass: 'custom-select',
                             ajax: {
                                 url: "<?=site_url('uoms/getUoms')?>",
                                 type: "post",
@@ -260,7 +260,6 @@
                                     return {
                                         results: response.data,
                                         pagination: {
-                                            // more: (params.page * 10) < data.count_filtered
                                             more: response.pagination.more
                                         }
                                     };
@@ -274,6 +273,53 @@
                         // create the option and append to Select2
                         var option = new Option(uname, uid, true, true);
                         uomSelect.append(option).trigger('change');
+
+                        $("#label").select2({
+                            multiple: true,
+                            theme: "bootstrap4 ",
+                            ajax: {
+                                url: "<?=site_url('labels/getLabels')?>",
+                                type: "post",
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    // CSRF Hash
+                                    var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                                    var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                                    return {
+                                    searchTerm: params.term, // search term
+                                    page: params.page || 1,
+                                    [csrfName]: csrfHash // CSRF Token
+                                    };
+                                },
+                                processResults: function (response, params) {
+                                    params.page = params.page || 1;
+
+                                    // Update CSRF Token
+                                    $('.txt_csrfname').val(response.token);
+
+                                    return {
+                                        results: response.data,
+                                        pagination: {
+                                            more: response.pagination.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        // Fetch the preselected item, and add to the control
+                        var labelSelect = $('#label');
+                        var arrLname = lname.split(',');
+                        var arrLid = lid.split('_');
+                        var options = [];
+                        // create the option and append to Select2
+                        $(arrLname).each(function(k,v) {
+                            options[k] = new Option(v, arrLid[k], true, true);
+                        });
+                        labelSelect.append(options).trigger('change');
 
 
                         $("#warehouse").select2({

@@ -14,8 +14,8 @@
         <div class="-feedback"></div>
     </div>
     <div class="form-group col-md-12">
-        <label for="productLabels">Product Labels</label>
-        <input type="text" class="form-control" id="productLabels" placeholder="Product Labels" name="productLabels" value="<?= $label[0]['labels_name'] ?>" disabled>
+        <label for="label">Product Labels</label>
+        <select name="label" id="label" class="custom-select"></select>
         <div class="-feedback"></div>
     </div>
     <div class="form-group col-md-12">

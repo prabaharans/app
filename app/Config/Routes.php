@@ -19,6 +19,7 @@ $routes->get('/bins/ajaxBinsDataTables', 'Bins::ajaxBinsDataTables');
 $routes->post('/bins/getBins', 'Bins::getBins');
 $routes->get('/labels', 'Labels::index');
 $routes->get('/labels/ajaxLabelsDataTables', 'Labels::ajaxLabelsDataTables');
+$routes->post('/labels/getLabels', 'Labels::getLabels');
 $routes->get('/uoms', 'Uoms::index');
 $routes->get('/uoms/ajaxUomsDataTables', 'Uoms::ajaxUomsDataTables');
 $routes->post('/uoms/getUoms', 'Uoms::getUoms');
