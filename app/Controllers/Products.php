@@ -7,6 +7,11 @@ use CodeIgniter\HTTP\ResponseInterface;
 use \Hermawan\DataTables\DataTable;
 use \App\Models\ProductsModel;
 use \App\Models\WarehousesModel;
+use \App\Models\ProductWarehousesModel;
+use \App\Models\ProductRacksModel;
+use \App\Models\ProductBinsModel;
+use \App\Models\ProductLabelsModel;
+use \App\Models\ProductDetailsModel;
 class Products extends BaseController
 {
     public function index()
@@ -58,10 +63,35 @@ class Products extends BaseController
         return view('product_add_view');
     }
 
-    public function edit()
+    public function edit($productId, $productWarehouseId, $productRackId, $productBinId, $productLabelId, $productDetailsId)
     {
-        
-        return view('product_edit_view');
+        // $request = service('request');
+        // $postData = $request->getPost();
+        // echo '<pre>';
+        // print_r($productId);
+        // print_r($productWarehouseId);
+        // print_r($productRackId);
+        // print_r($productBinId);
+        // echo '</pre>';
+        // die;
+        $productsModel = new ProductsModel();
+        $warehousesModel = new ProductWarehousesModel();
+        $racksModel = new ProductRacksModel();
+        $binModel = new ProductBinsModel();
+        $productDetailsModel = new ProductDetailsModel();
+        $labelsModel = new ProductLabelsModel();
+        $data['product'] = $productsModel->find($productId);
+        $data['warehouse'] = $warehousesModel->join('warehouses', 'warehouses.id = product_warehouses.warehouse_id', 'inner')->find($productWarehouseId);
+        $data['rack'] = $racksModel->join('racks', 'racks.id = product_racks.rack_id', 'inner')->find($productRackId);
+        $data['bin'] = $binModel->join('bins', 'bins.id = product_bins.bin_id', 'inner')->find($productBinId);
+        $arrProductLabelId = explode('_',$productLabelId);
+        $data['label'] = $labelsModel->select('GROUP_CONCAT(DISTINCT(product_labels.id) SEPARATOR "_") as plid, GROUP_CONCAT(DISTINCT(labels.id) SEPARATOR "_") as label_id, GROUP_CONCAT(DISTINCT(labels.name) SEPARATOR ",") as labels_name')->join('labels', 'labels.id = product_labels.label_id', 'inner')->whereIn('product_labels.id',$arrProductLabelId)->asArray()->find();
+        $data['details'] = $productDetailsModel->find($productDetailsId);
+        // echo '<pre>';
+        // print_r($data);
+        // echo '<pre>';
+        // die;
+        return view('product_edit_view', $data);
     }
 
     public function update()

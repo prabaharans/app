@@ -7,6 +7,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" integrity="sha512-PT0RvABaDhDQugEbpNMwgYBCnGCiTZMh9yOzUsJHDgl/dMhD9yjHAwoumnUk3JydV3QTcIkNDuN40CJxik5+WQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.uikit.min.css" integrity="sha512-v1si6kCoH7ODQMp4X4TZXOZzDTrhKhWRdd50pRuejFJMSYKrLoW68NQmmTJWjgs1B0VRYaE6oB1CDq6r5r306A==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap4-theme@1.0.0/dist/select2-bootstrap4.min.css" integrity="sha256-7p3NMTTzkSWRi3VbWxl81A6/R2GaxC2QUb7jh4wRGKI=" crossorigin="anonymous">
+<style>
+    .main-modal {
+  .modal-body {
+    overflow-y: auto;
+    max-height: 80vh;
+  }
+}
+.select2-container--open {
+    z-index: 9999999
+}
+</style>
 <style {csp-style-nonce}>
 
     header {

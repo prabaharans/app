@@ -25,6 +25,8 @@
                             <th>pwid</th>
                             <th>prid</th>
                             <th>pbid</th>
+                            <th>plid</th>
+                            <th>pdid</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -33,8 +35,8 @@
         </div>
 
     </div>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow:hidden;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
@@ -43,6 +45,8 @@
                 <input type="hidden" name="pwid" id="pwid" value="" />
                 <input type="hidden" name="prid" id="prid" value="" />
                 <input type="hidden" name="pbid" id="pbid" value="" />
+                <input type="hidden" name="plid" id="plid" value="" />
+                <input type="hidden" name="pdid" id="pdid" value="" />
             </div>
             <div class="modal-body"></div>
             <!-- <div class="modal-footer">
@@ -83,6 +87,16 @@
                             target: 13,
                             visible: false,
                             searchable: false
+                        },
+                        {
+                            target: 14,
+                            visible: false,
+                            searchable: false
+                        },
+                        {
+                            target: 15,
+                            visible: false,
+                            searchable: false
                         }
                     ],
                     columns: [
@@ -99,6 +113,8 @@
                         {data: 'pwid', visible: false},
                         {data: 'prid', visible: false},
                         {data: 'pbid', visible: false},
+                        {data: 'plid', visible: false},
+                        {data: 'pdid', visible: false},
                         // {data: 'action', orderable: false},
                         {
                             data: null,
@@ -119,13 +135,18 @@
                             console.log('data.pwid => '+data.pwid);
                             console.log('data.prid => '+data.prid);
                             console.log('data.pbid => '+data.pbid);
+                            console.log('data.plid => '+data.plid);
+                            console.log('data.pdid => '+data.pdid);
                             $('#pid').val(data.pid);
                             $('#pwid').val(data.pwid);
                             $('#prid').val(data.prid);
                             $('#pbid').val(data.pbid);
-                            $('#myModalLabel').text('Edit');
-                            $('#myModal').modal('show');
-
+                            $('#plid').val(data.plid);
+                            $('#pdid').val(data.pdid);
+                            // setTimeout(function() {
+                                $('#myModalLabel').text('Edit');
+                                $('#myModal').modal('show');
+                            // }, 10);
                         });
                     },
                     // responsive: {
@@ -143,12 +164,6 @@
                     // }
                 });
 
-                $("#myModal").on("show.bs.modal", function(e) {
-                    var link = $(e.relatedTarget);
-                    $(this).find(".modal-body").load(link.attr("data-href"));
-
-
-                });
                 // Add record
                 $('.add').on('click', function (e) {
 
@@ -157,7 +172,180 @@
                 $('#table').on('click', 'td.edit button', function (e) {
 
                 });
+                // $('.select2').each(function() {
+                //     $(this).select2({ dropdownParent: $(this).parent()});
+                // })
+                // setTimeout(function() {
+                    // console.log('wid => '+wid);
+                    // console.log('rid => '+rid);
+                    // console.log('bid => '+bid);
+                    // Initialize select2
+
+                    // $("#warehouse").val(wid);
+                    // $("#rack").val(rid);
+                    // $("#bin").val(bid);
+                // }, 10);
             });
+
+            $("#myModal").on("show.bs.modal", function(e) {
+                var link = $(e.relatedTarget);
+                if(typeof link.attr("data-href") !== 'undefined') {
+                    let pid = $('#pid').val();
+                    let pwid = $('#pwid').val();
+                    let prid = $('#prid').val();
+                    let pbid = $('#pbid').val();
+                    let plid = $('#plid').val();
+                    let pdid = $('#pdid').val();
+                    let wid = $('#wid').val();
+                    let wname = $('#wname').val();
+                    let rid = $('#rid').val();
+                    let rname = $('#rname').val();
+                    let bid = $('#bid').val();
+                    let bname = $('#bname').val();
+                    let lid = $('#lid').val();
+                    let lname = $('#lname').val();
+                    console.log('pid => '+pid);
+                    console.log('pwid => '+pwid);
+                    console.log('prid => '+prid);
+                    console.log('pbid => '+pbid);
+                    console.log('plid => '+plid);
+                    console.log('pdid => '+pdid);
+                    console.log('wid => '+wid);
+                    console.log('rid => '+rid);
+                    console.log('bid => '+bid);
+                    console.log('lid => '+lid);
+
+                    $(this).find(".modal-body").load(link.attr("data-href")+'/'+pid+'/'+'/'+pwid+'/'+'/'+prid+'/'+'/'+pbid+'/'+'/'+plid+'/'+'/'+pdid+'/');
+                    setTimeout(function() {
+                        $("#warehouse").select2({
+                            theme: "bootstrap4 ",
+                            // containerCssClass: 'custom-select',
+                            ajax: {
+                                url: "<?=site_url('warehouses/getWarehouses')?>",
+                                type: "post",
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    // CSRF Hash
+                                    var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                                    var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                                    return {
+                                    searchTerm: params.term, // search term
+                                    page: params.page || 1,
+                                    [csrfName]: csrfHash // CSRF Token
+                                    };
+                                },
+                                processResults: function (response, params) {
+                                    params.page = params.page || 1;
+
+                                    // Update CSRF Token
+                                    $('.txt_csrfname').val(response.token);
+
+                                    return {
+                                        results: response.data,
+                                        pagination: {
+                                            // more: (params.page * 10) < data.count_filtered
+                                            more: response.pagination.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        // Fetch the preselected item, and add to the control
+                        var warehouseSelect = $('#warehouse');
+                        // create the option and append to Select2
+                        var option = new Option(wname, wid, true, true);
+                        warehouseSelect.append(option).trigger('change');
+
+
+                        $("#rack").select2({
+                            theme: "bootstrap4 ",
+                            ajax: {
+                                url: "<?=site_url('racks/getRacks')?>",
+                                type: "post",
+                                dataType: 'json',
+                                delay: 50,
+                                data: function (params) {
+                                    // CSRF Hash
+                                    var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                                    var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                                    return {
+                                    searchTerm: params.term, // search term
+                                    page: params.page || 1,
+                                    [csrfName]: csrfHash // CSRF Token
+                                    };
+                                },
+                                processResults: function (response) {
+
+                                    // Update CSRF Token
+                                    $('.txt_csrfname').val(response.token);
+
+                                    return {
+                                        results: response.data,
+                                        pagination: {
+                                            more: response.pagination.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        // Fetch the preselected item, and add to the control
+                        var rackSelect = $('#rack');
+                        // create the option and append to Select2
+                        var option = new Option(rname, rid, true, true);
+                        rackSelect.append(option).trigger('change');
+
+                        $("#bin").select2({
+                            theme: "bootstrap4",
+                            ajax: {
+                                url: "<?=site_url('bins/getBins')?>",
+                                type: "post",
+                                dataType: 'json',
+                                delay: 50,
+                                data: function (params) {
+                                    // CSRF Hash
+                                    var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                                    var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                                    return {
+                                    searchTerm: params.term, // search term
+                                    page: params.page || 1,
+                                    [csrfName]: csrfHash // CSRF Token
+                                    };
+                                },
+                                processResults: function (response) {
+
+                                    // Update CSRF Token
+                                    $('.txt_csrfname').val(response.token);
+
+                                    return {
+                                        results: response.data,
+                                        pagination: {
+                                            more: response.pagination.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        // Fetch the preselected item, and add to the control
+                        var binSelect = $('#bin');
+                        // create the option and append to Select2
+                        var option = new Option(bname, bid, true, true);
+                        binSelect.append(option).trigger('change');
+
+                    }, 1000);
+                }
+
+            });
+
         });
     </script>
 <?= $this->endSection() ?>

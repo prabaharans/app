@@ -25,4 +25,39 @@ class Racks extends BaseController
         }, 'last')
         ->toJson();
     }
+
+    public function getRacks($limit = 10, $offset = 0)
+    {
+        $request = service('request');
+        $postData = $request->getPost();
+
+        $response = array();
+
+        // Read new token and assign in $response['token']
+        $response['token'] = csrf_hash();
+        $page = ($postData['page']) ?? 1;
+        $offset = ($page - 1) * $limit;
+        // Fetch record
+        $racks = new RacksModel();
+        $racks->select('id,name')->orderBy('name')->asArray();
+        if(isset($postData['searchTerm'])){
+            $searchTerm = $postData['searchTerm'];
+            $racks->like('name',$searchTerm);
+        }
+        $racksCount = $racks->countAllResults();
+        $racksList = $racks->findAll($limit, $offset);
+        $endCount = $offset + $limit;
+        $morePages = $endCount < $racksCount;
+        $data = array();
+        foreach($racksList as $rack){
+            $data[] = array(
+                "id" => $rack['id'],
+                "text" => $rack['name'],
+            );
+        }
+
+        $response['data'] = $data;
+        $response['pagination']['more'] = $morePages;
+        return $this->response->setJSON($response);
+    }
 }

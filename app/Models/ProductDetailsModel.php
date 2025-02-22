@@ -4,13 +4,13 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class WarehousesModel extends Model
+class ProductDetailsModel extends Model
 {
-    protected $table            = 'warehouses';
+    protected $table            = 'product_details';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = true;
+    protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [];
 
@@ -43,5 +43,4 @@ class WarehousesModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-
 }

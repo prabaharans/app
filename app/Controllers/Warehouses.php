@@ -27,7 +27,7 @@ class Warehouses extends BaseController
         ->toJson();
     }
 
-    public function getWarehouses($limit = 5, $offset = 10)
+    public function getWarehouses($limit = 10, $offset = 0)
     {
         $request = service('request');
         $postData = $request->getPost();
@@ -36,24 +36,48 @@ class Warehouses extends BaseController
 
         // Read new token and assign in $response['token']
         $response['token'] = csrf_hash();
+        $page = ($postData['page']) ?? 1;
+        $offset = ($page - 1) * $limit;
 
         // Fetch record
         $warehouses = new WarehousesModel();
-        $warehousesList = $warehouses->select('id,name')
-        if(isset($postData['searchTerm'])){
-            $searchTerm = $postData['searchTerm'];
-            $warehousesList->like('name',$searchTerm);
+        // $warehouses = model(WarehousesModel::class);
+        $warehouses->select('id,name')->orderBy('name')->asArray();
+        if(isset($postData['wid'])){
+            $wid = $postData['wid'];
+            $warehouse = $warehouses->find($wid);
+            $data[] = array(
+                "id" => $warehouse['id'],
+                "text" => $warehouse['name'],
+            );
+            $response['data'] = $data;
+        } else {
+            if(isset($postData['searchTerm'])){
+                $searchTerm = $postData['searchTerm'];
+                $warehouses->like('name',$searchTerm);
+            }
+            $warehousesCount = $warehouses->countAllResults();
+            $warehousesList = $warehouses->findAll($limit, $offset);
+            // $query = $warehouses->getLastQuery();
+            // if ($query->hasError()) {
+            //     echo 'Code: ' . $query->getErrorCode();
+            //     echo 'Error: ' . $query->getErrorMessage();
+            //     die;
+            // }
+            $endCount = $offset + $limit;
+            $morePages = $endCount < $warehousesCount;
+
+            $data = array();
+            foreach($warehousesList as $warehouse){
+                $data[] = array(
+                    "id" => $warehouse['id'],
+                    "text" => $warehouse['name'],
+                );
+            }
+
+            $response['data'] = $data;
+            $response['pagination']['more'] = $morePages;
         }
-        $warehousesList->orderBy('name')->findAll($limit, $offset);
-        $data = array();
-        foreach($warehousesList as $warehouse){
-        $data[] = array(
-            "id" => $warehouse['id'],
-            "text" => $warehouse['name'],
-        );
-
-        $response['data'] = $data;
-
         return $this->response->setJSON($response);
     }
 }
