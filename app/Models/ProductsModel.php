@@ -47,17 +47,18 @@ class ProductsModel extends Model
 
     public function getProductList()
     {
-        $this->select('products.id as pid, products.name, products.uom');
+        $this->select('products.id as pid, products.name');
         // $this->select('CONCAT(warehouses.name," / ",racks.name, " / ", bins.name) as warehouses_name');
         // $this->select('GROUP_CONCAT(DISTINCT(warehouses.name) SEPARATOR ",") as warehouses_name');
         // $this->select('GROUP_CONCAT(DISTINCT(racks.name) SEPARATOR ",") as racks_name');
         // $this->select('GROUP_CONCAT(DISTINCT(bins.name) SEPARATOR ",") as bins_name');
+        $this->select('uoms.name as uoms_name');
         $this->select('warehouses.name as warehouses_name');
         $this->select('racks.name as racks_name');
         $this->select('bins.name as bins_name');
         $this->select('GROUP_CONCAT(DISTINCT(labels.name) SEPARATOR ",") as labels_name');
         $this->select('product_details.quantity, products.status');
-        $this->select('product_warehouses.id as pwid, product_racks.id as prid, product_bins.id as pbid, product_details.id as pdid');
+        $this->select('product_uoms.id as puid, product_warehouses.id as pwid, product_racks.id as prid, product_bins.id as pbid, product_details.id as pdid');
         // $this->select('GROUP_CONCAT(DISTINCT(labels.id) SEPARATOR ",") as lid');
         $this->select('GROUP_CONCAT(DISTINCT(product_labels.id) SEPARATOR "_") as plid');
         $this->join('product_warehouses', 'product_warehouses.product_id = products.id', 'inner');
@@ -69,7 +70,10 @@ class ProductsModel extends Model
         $this->join('product_details', 'product_bins.id = product_bin_id', 'inner');
         $this->join('product_labels', 'product_labels.product_id = products.id');
         $this->join('labels', 'labels.id = product_labels.label_id', 'inner');
+        $this->join('product_uoms', 'product_uoms.product_id = products.id');
+        $this->join('uoms', 'uoms.id = product_uoms.uom_id', 'inner');
         $this->groupBy('products.id');
+        $this->groupBy('product_uoms.id');
         $this->groupBy('product_warehouses.id');
         $this->groupBy('product_racks.id');
         $this->groupBy('product_bins.id');

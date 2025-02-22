@@ -10,7 +10,7 @@
     </div>
     <div class="form-group col-md-12">
         <label for="uom">UOM</label>
-        <input type="text" class="form-control" id="uom" placeholder="UOM" name="uom" value="<?= $product['uom']; ?>" disabled>
+        <select name="uom" id="uom" class="custom-select"></select>
         <div class="-feedback"></div>
     </div>
     <div class="form-group col-md-12">
@@ -40,6 +40,8 @@
     </div>
 </div>
 <input type="hidden" name="pid" id="pid" value="<?= $product['id'] ?>" />
+<input type="hidden" name="uid" id="uid" value="<?= $uom['uom_id'] ?>" />
+<input type="hidden" name="uname" id="uname" value="<?= $uom['name'] ?>" />
 <input type="hidden" name="wid" id="wid" value="<?= $warehouse['warehouse_id'] ?>" />
 <input type="hidden" name="wname" id="wname" value="<?= $warehouse['name'] ?>" />
 <input type="hidden" name="rid" id="rid" value="<?= $rack['rack_id'] ?>" />
@@ -48,6 +50,7 @@
 <input type="hidden" name="bname" id="bname" value="<?= $bin['name'] ?>" />
 <input type="hidden" name="lid" id="lid" value="<?= $label[0]['label_id'] ?>" />
 <input type="hidden" name="lname" id="lname" value="<?= $label[0]['labels_name'] ?>" />
+<input type="hidden" name="puid" id="puid" value="<?= $uom['id'] ?>" />
 <input type="hidden" name="pwid" id="pwid" value="<?= $warehouse['id'] ?>" />
 <input type="hidden" name="prid" id="prid" value="<?= $rack['id'] ?>" />
 <input type="hidden" name="pbid" id="pbid" value="<?= $bin['id'] ?>" />

@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Products extends Migration
+class Uoms extends Migration
 {
     public function up()
     {
@@ -19,11 +19,11 @@ class Products extends Migration
 
         $this->forge->addPrimaryKey('id');
         $this->forge->addUniqueKey('name');
-        $this->forge->createTable('products', false, ['ENGINE' => 'InnoDB']);
+        $this->forge->createTable('uoms', false, ['ENGINE' => 'InnoDB']);
     }
 
     public function down()
     {
-        $this->forge->dropTable('products');
+        $this->forge->dropTable('uoms');
     }
 }

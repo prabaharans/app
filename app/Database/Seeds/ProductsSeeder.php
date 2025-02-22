@@ -13,8 +13,6 @@ class ProductsSeeder extends Seeder
         for ($i = 0; $i < 50; $i++) {
             $seed = [
                 'name'        => $faker->unique()->word(),
-                'uom'         => $faker->unique()->word(3),
-
                 'created_at'  => date('Y-m-d H:i:s'),
                 'updated_at'  => date('Y-m-d H:i:s'),
             ];
@@ -22,6 +20,16 @@ class ProductsSeeder extends Seeder
             // $data[] = $seed;
             $this->db->table('products')->insert($seed);
             $productId = $this->db->insertID();
+
+            $uomId = $this->getRandomId('uoms');
+            $puSeed = [
+                'product_id' => $productId,
+                'uom_id' => $uomId,
+                'created_at'  => date('Y-m-d H:i:s'),
+                'updated_at'  => date('Y-m-d H:i:s'),
+            ];
+            $this->db->table('product_uoms')->insert($puSeed);
+
             $warehouseIds = [];
             $warehouseIds[] = $this->getRandomId('warehouses');
             $warehouseIds[] = $this->getRandomId('warehouses');

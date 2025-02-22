@@ -121,6 +121,7 @@
                 <li class="menu-item hidden"><a href="<?= base_url().'racks' ?>">Racks</a></li>
                 <li class="menu-item hidden"><a href="<?= base_url().'bins' ?>">Bins</a></li>
                 <li class="menu-item hidden"><a href="<?= base_url().'labels' ?>">Product Labels</a></li>
+                <li class="menu-item hidden"><a href="<?= base_url().'uoms' ?>">UOMs</a></li>
                 <li class="menu-item hidden"><a href="<?= base_url().'products' ?>">Products</a></li>
                 <!-- <li class="menu-item hidden"><a href="https://codeigniter.com/user_guide/" target="_blank">Docs</a>
                 </li>

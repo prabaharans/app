@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use \Hermawan\DataTables\DataTable;
 use \App\Models\ProductsModel;
 use \App\Models\WarehousesModel;
+use \App\Models\ProductUomsModel;
 use \App\Models\ProductWarehousesModel;
 use \App\Models\ProductRacksModel;
 use \App\Models\ProductBinsModel;
@@ -63,7 +64,7 @@ class Products extends BaseController
         return view('product_add_view');
     }
 
-    public function edit($productId, $productWarehouseId, $productRackId, $productBinId, $productLabelId, $productDetailsId)
+    public function edit($productId, $productUomId, $productWarehouseId, $productRackId, $productBinId, $productLabelId, $productDetailsId)
     {
         // $request = service('request');
         // $postData = $request->getPost();
@@ -80,7 +81,9 @@ class Products extends BaseController
         $binModel = new ProductBinsModel();
         $productDetailsModel = new ProductDetailsModel();
         $labelsModel = new ProductLabelsModel();
+        $uomsModel = new ProductUomsModel();
         $data['product'] = $productsModel->find($productId);
+        $data['uom'] = $uomsModel->join('uoms', 'uoms.id = product_uoms.uom_id', 'inner')->find($productUomId);
         $data['warehouse'] = $warehousesModel->join('warehouses', 'warehouses.id = product_warehouses.warehouse_id', 'inner')->find($productWarehouseId);
         $data['rack'] = $racksModel->join('racks', 'racks.id = product_racks.rack_id', 'inner')->find($productRackId);
         $data['bin'] = $binModel->join('bins', 'bins.id = product_bins.bin_id', 'inner')->find($productBinId);

@@ -22,6 +22,7 @@
                             <th>Product Labels</th>
                             <th>Quantity</th>
                             <th>Status</th>
+                            <th>puid</th>
                             <th>pwid</th>
                             <th>prid</th>
                             <th>pbid</th>
@@ -42,6 +43,7 @@
                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <input type="hidden" name="pid" id="pid" value="" />
+                <input type="hidden" name="puid" id="puid" value="" />
                 <input type="hidden" name="pwid" id="pwid" value="" />
                 <input type="hidden" name="prid" id="prid" value="" />
                 <input type="hidden" name="pbid" id="pbid" value="" />
@@ -97,19 +99,25 @@
                             target: 15,
                             visible: false,
                             searchable: false
+                        },
+                        {
+                            target: 16,
+                            visible: false,
+                            searchable: false
                         }
                     ],
                     columns: [
                         {data: 'no', orderable: false},
                         {data: 'pid', visible: false},
                         {data: 'name'},
-                        {data: 'uom'},
+                        {data: 'uoms_name'},
                         {data: 'warehouses_name'},
                         {data: 'racks_name'},
                         {data: 'bins_name'},
                         {data: 'labels_name'},
                         {data: 'quantity'},
                         {data: 'status'},
+                        {data: 'puid', visible: false},
                         {data: 'pwid', visible: false},
                         {data: 'prid', visible: false},
                         {data: 'pbid', visible: false},
@@ -132,12 +140,14 @@
                     rowCallback: function(row, data, index){
                         $(row).find('.edit').on('click', function() {
                             console.log('data.pid => '+data.pid);
+                            console.log('data.puid => '+data.puid);
                             console.log('data.pwid => '+data.pwid);
                             console.log('data.prid => '+data.prid);
                             console.log('data.pbid => '+data.pbid);
                             console.log('data.plid => '+data.plid);
                             console.log('data.pdid => '+data.pdid);
                             $('#pid').val(data.pid);
+                            $('#puid').val(data.puid);
                             $('#pwid').val(data.pwid);
                             $('#prid').val(data.prid);
                             $('#pbid').val(data.pbid);
@@ -191,6 +201,7 @@
                 var link = $(e.relatedTarget);
                 if(typeof link.attr("data-href") !== 'undefined') {
                     let pid = $('#pid').val();
+                    let puid = $('#puid').val();
                     let pwid = $('#pwid').val();
                     let prid = $('#prid').val();
                     let pbid = $('#pbid').val();
@@ -198,6 +209,8 @@
                     let pdid = $('#pdid').val();
                     let wid = $('#wid').val();
                     let wname = $('#wname').val();
+                    let uid = $('#uid').val();
+                    let uname = $('#uname').val();
                     let rid = $('#rid').val();
                     let rname = $('#rname').val();
                     let bid = $('#bid').val();
@@ -205,18 +218,64 @@
                     let lid = $('#lid').val();
                     let lname = $('#lname').val();
                     console.log('pid => '+pid);
+                    console.log('puid => '+puid);
                     console.log('pwid => '+pwid);
                     console.log('prid => '+prid);
                     console.log('pbid => '+pbid);
                     console.log('plid => '+plid);
                     console.log('pdid => '+pdid);
+                    console.log('uid => '+uid);
                     console.log('wid => '+wid);
                     console.log('rid => '+rid);
                     console.log('bid => '+bid);
                     console.log('lid => '+lid);
 
-                    $(this).find(".modal-body").load(link.attr("data-href")+'/'+pid+'/'+'/'+pwid+'/'+'/'+prid+'/'+'/'+pbid+'/'+'/'+plid+'/'+'/'+pdid+'/');
+                    $(this).find(".modal-body").load(link.attr("data-href")+'/'+pid+'/'+'/'+puid+'/'+pwid+'/'+'/'+prid+'/'+'/'+pbid+'/'+'/'+plid+'/'+'/'+pdid+'/');
                     setTimeout(function() {
+                        $("#uom").select2({
+                            theme: "bootstrap4 ",
+                            // containerCssClass: 'custom-select',
+                            ajax: {
+                                url: "<?=site_url('uoms/getUoms')?>",
+                                type: "post",
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    // CSRF Hash
+                                    var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                                    var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                                    return {
+                                    searchTerm: params.term, // search term
+                                    page: params.page || 1,
+                                    [csrfName]: csrfHash // CSRF Token
+                                    };
+                                },
+                                processResults: function (response, params) {
+                                    params.page = params.page || 1;
+
+                                    // Update CSRF Token
+                                    $('.txt_csrfname').val(response.token);
+
+                                    return {
+                                        results: response.data,
+                                        pagination: {
+                                            // more: (params.page * 10) < data.count_filtered
+                                            more: response.pagination.more
+                                        }
+                                    };
+                                },
+                                cache: true
+                            }
+                        });
+
+                        // Fetch the preselected item, and add to the control
+                        var uomSelect = $('#uom');
+                        // create the option and append to Select2
+                        var option = new Option(uname, uid, true, true);
+                        uomSelect.append(option).trigger('change');
+
+
                         $("#warehouse").select2({
                             theme: "bootstrap4 ",
                             // containerCssClass: 'custom-select',
