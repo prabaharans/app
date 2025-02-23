@@ -25,8 +25,11 @@ $routes->get('/uoms/ajaxUomsDataTables', 'Uoms::ajaxUomsDataTables');
 $routes->post('/uoms/getUoms', 'Uoms::getUoms');
 $routes->get('/products', 'Products::index');
 $routes->get('/products/ajaxProductsDataTables', 'Products::ajaxProductsDataTables');
-$routes->get('/product/edit/(:num)/(:num)/(:num)/(:num)/(:any)/(:num)', 'Products::edit/$1/$2/$3/$4/$5/$6');
-$routes->get('/product/add', 'Products::add');
-$routes->get('/product/update', 'Products::update');
+$routes->post('/products/getProducts', 'Products::getProducts');
+$routes->get('/product-details', 'ProductDetails::index');
+$routes->get('/product-details/ajaxProductDetailsDataTables', 'ProductDetails::ajaxProductDetailsDataTables');
+$routes->get('/product-detail/edit/(:num)/(:num)/(:num)/(:num)/(:any)/(:num)', 'ProductDetails::edit/$1/$2/$3/$4/$5/$6');
+$routes->get('/product-detail/add', 'ProductDetails::add');
+$routes->get('/product-detail/update', 'ProductDetails::update');
 
 service('auth')->routes($routes);

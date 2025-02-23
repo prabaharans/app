@@ -61,6 +61,8 @@ class ProductsModel extends Model
         $this->select('product_uoms.id as puid, product_warehouses.id as pwid, product_racks.id as prid, product_bins.id as pbid, product_details.id as pdid');
         // $this->select('GROUP_CONCAT(DISTINCT(labels.id) SEPARATOR ",") as lid');
         $this->select('GROUP_CONCAT(DISTINCT(product_labels.id) SEPARATOR "_") as plid');
+        $this->select('GROUP_CONCAT(DISTINCT(labels.id) SEPARATOR "_") as lid');
+        $this->select('warehouses.id as wid, racks.id as rid, bins.id as bid, uoms.id as uid ');
         $this->join('product_warehouses', 'product_warehouses.product_id = products.id', 'inner');
         $this->join('warehouses', 'warehouses.id = product_warehouses.warehouse_id', 'inner');
         $this->join('product_racks', 'product_warehouses.id = product_warehouse_id', 'inner');
@@ -79,12 +81,7 @@ class ProductsModel extends Model
         $this->groupBy('product_bins.id');
         // $this->groupBy('product_labels.id');
         $this->groupBy('product_details.id');
-        return DataTable::of($this)->addNumbering('no')->toJson(true);
-
-        // ->add('action', function($row){
-        //     return '<button type="button" class="btn btn-primary btn-sm" onclick="alert(\'edit product: '.$row->name.'\')" ><i class="fas fa-edit"></i> Edit</button>';
-        // }, 'last')
-        // ->hide('pid')
+        return $this;
     }
 
 }
